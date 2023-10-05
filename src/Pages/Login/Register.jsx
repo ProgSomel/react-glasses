@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import SocialLogin from './SocialLogin';
 import useAuth from '../../hooks/useAuth';
 import toast from 'react-hot-toast';
@@ -7,7 +7,10 @@ import { auth } from '../../config/firebaseConfig';
 
 const Register = () => {
 
-    const {createUser} = useAuth();
+    const {createUser, updateUserProfile} = useAuth();
+
+    const navigate = useNavigate();
+
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -26,8 +29,16 @@ const Register = () => {
 
         //? Creating a new user 
         createUser( email, password)
-        .then(res => console.log(res.user))
-        .catch(err => console.log(err))
+        .then(res => {
+            updateUserProfile(name, img)
+            .then(() => {
+                toast.success("user created successfully")
+                navigate('/')
+            })
+        })
+        .catch(err => {
+            toast.error(err.message)
+        })
         
 
         

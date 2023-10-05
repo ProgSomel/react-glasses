@@ -1,11 +1,14 @@
-import { Link } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import SocialLogin from './SocialLogin';
 import useAuth from '../../hooks/useAuth';
+import toast from 'react-hot-toast';
 
 
 const Login = () => {
 
     const {loginInWithEmailAndPassword} = useAuth();
+    const navigate = useNavigate();
+
 
     const handleSubmit = (e) => {
 
@@ -14,8 +17,13 @@ const Login = () => {
         const password = e.target.password.value;
 
         loginInWithEmailAndPassword(email, password)
-        .then(res => console.log(res.user))
-        .catch(error => console.log(error))
+        .then(res => {
+            toast.success("user logged In successfully")
+                navigate('/')
+        })
+        .catch(error =>{
+            toast.error(error.message)
+        })
     }
 
     return (
