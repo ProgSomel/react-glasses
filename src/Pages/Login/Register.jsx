@@ -1,7 +1,40 @@
 import { Link } from 'react-router-dom';
 import SocialLogin from './SocialLogin';
+import useAuth from '../../hooks/useAuth';
+import toast from 'react-hot-toast';
+import { auth } from '../../config/firebaseConfig';
+
 
 const Register = () => {
+
+    const {createUser} = useAuth();
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        
+        //? get field values 
+        const name = e.target.name.value;
+        const email = e.target.email.value;
+        const img = e.target.img.value;
+        const password = e.target.password.value;
+
+        //? validation 
+        if(password.length < 6 ) {
+            toast.error("Password must be at least 6 characters");
+            return;
+        }
+
+        //? Creating a new user 
+        createUser( email, password)
+        .then(res => console.log(res.user))
+        .catch(err => console.log(err))
+        
+
+        
+    }
+
+
+    
     return (
         <>
             <div className="hero min-h-screen bg-base-200">
@@ -11,39 +44,39 @@ const Register = () => {
                         <p className="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
                     </div>
                     <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
-                        <div className="card-body">
+                        <form onSubmit={handleSubmit} className="card-body">
                             <div className="form-control">
                                 <label className="label">
                                     <span className="label-text">Full Name</span>
                                 </label>
-                                <input type="text" placeholder="Full name" className="input input-bordered" />
+                                <input type="text" name='name' placeholder="Full name" className="input input-bordered" />
                             </div>
                             <div className="form-control">
                                 <label className="label">
                                     <span className="label-text">Email</span>
                                 </label>
-                                <input type="text" placeholder="email" className="input input-bordered" />
+                                <input type="text" name='email' placeholder="email" className="input input-bordered" />
                             </div>
                             <div className="form-control">
                                 <label className="label">
                                     <span className="label-text">Image Url</span>
                                 </label>
-                                <input type="text" placeholder="image url" className="input input-bordered" />
+                                <input type="text" name='img' placeholder="image url" className="input input-bordered" />
                             </div>
                             <div className="form-control">
                                 <label className="label">
                                     <span className="label-text">Password</span>
                                 </label>
-                                <input type="text" placeholder="password" className="input input-bordered" />
+                                <input type="text" name='password' placeholder="password" className="input input-bordered" />
                             </div>
                             <div className="form-control mt-6 p-0">
-                                <button className="btn btn-neutral">Register</button>
+                                <button type='submit' className="btn btn-neutral">Register</button>
                             </div>
                             <label className="label">
                                 Have an account? <Link to="/login" className="label-text-alt link link-hover">Please Login</Link>
                             </label>
                             <SocialLogin />
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>
